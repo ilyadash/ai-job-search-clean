@@ -1,0 +1,12 @@
+﻿Здравствуйте, [GREETING_NAME]!
+
+Меня зовут [YOUR_NAME], я [SPECIALTY]. Меня заинтересовала вакансия «[ROLE]»: [VACANCY_URL].
+
+[MOTIVATION_PARAGRAPH]
+
+[PROJECTS_PARAGRAPH]
+
+[CLOSING_PARAGRAPH]
+
+[CLOSING_SIGNOFF],
+[YOUR_NAME]

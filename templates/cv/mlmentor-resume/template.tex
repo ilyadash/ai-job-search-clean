@@ -1,0 +1,175 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[letterpaper,top=0.3in,bottom=0.3in,left=0.5in,right=0.5in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{mdwlist}
+\usepackage[default]{lato}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\DeclareFontFamily{U}{fontawesomeOne}{}
+\DeclareFontShape{U}{fontawesomeOne}{m}{n}{<-> FontAwesome--fontawesomeone}{}
+\DeclareRobustCommand\FAone{\fontencoding{U}\fontfamily{fontawesomeOne}\selectfont}
+\pagestyle{empty}
+\setlength{\tabcolsep}{0em}
+
+\newenvironment{indentsection}[1]{\begin{list}{}{\setlength{\leftmargin}{#1}}\item[]}{\end{list}}
+\newenvironment{unindentsection}[1]{\begin{list}{}{\setlength{\leftmargin}{-0.5#1}}\item[]}{\end{list}}
+\newcommand{\headerrow}[2]{\begin{tabular*}{\linewidth}{l@{\extracolsep{\fill}}r} #1 & #2 \\ \end{tabular*}}
+\newcommand{\CPP}{C\nolinebreak[4]\hspace{-.05em}\raisebox{.22ex}{\footnotesize\bf ++}}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{[FIRST_NAME] [LAST_NAME]}}\\
+    [CITY, COUNTRY]
+    \vspace{0.03cm}
+    \\
+    \raisebox{-0.2\height} {\Large \faPhone} \ [+XX XXXXXXXXXX]
+    \hfill \raisebox{-0.2\height}{\Large \faEnvelope} \ \ \href{mailto:[your.email@example.com]}{[your.email@example.com]}
+    \hfill \raisebox{-0.2\height}{\Large \faGithub} \ \ \href{[https://github.com/your-username]}{GitHub}
+    \hfill \raisebox{-0.2\height}{\Large \faLinkedin} \ \ \href{[https://linkedin.com/in/your-profile]}{LinkedIn}
+\end{center}
+
+\hrule
+\vspace{-0.5em}
+\subsection*{\Large Desired Position}
+
+\begin{itemize}[leftmargin=1em,noitemsep]
+    \item {[TARGET_ROLE]}
+\end{itemize}
+
+\hrule
+\vspace{-1em}
+\subsection*{\Large Experience ([YEARS_OF_EXPERIENCE])}
+
+\renewcommand\labelitemi{}
+\renewcommand\labelitemii{$\bullet$}
+\begin{itemize}[leftmargin=1em, noitemsep]
+    \parskip=0.1em
+    \item
+      \headerrow
+      {\textbf{[COMPANY_1]}}
+      {\textbf{[LOCATION_1]}}
+      \headerrow
+      {\emph{[JOB_TITLE_1]}}
+      {\emph{[DATE_RANGE_1]}}
+      \begin{itemize*}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+      \end{itemize*}
+
+    % \item
+    %       \headerrow
+    %       {\textbf{[COMPANY_2]}}
+    %       {\textbf{[LOCATION_2]}}
+    %       \headerrow
+    %       {\emph{[JOB_TITLE_2]}}
+    %       {\emph{[DATE_RANGE_2]}}
+    %       \begin{itemize*}
+    %           \item {[ACHIEVEMENT_BULLET]}
+    %       \end{itemize*}
+
+    \item
+      \headerrow
+      {\textbf{[COMPANY_3]}}
+      {\textbf{[LOCATION_3]}}
+      \headerrow
+      {\emph{[JOB_TITLE_3]}}
+      {\emph{[DATE_RANGE_3]}}
+      \begin{itemize*}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+      \end{itemize*}
+
+    \item
+      \headerrow
+      {\textbf{[COMPANY_4]}}
+      {\textbf{[LOCATION_4]}}
+      \headerrow
+      {\emph{[JOB_TITLE_4]}}
+      {\emph{[DATE_RANGE_4]}}
+      \begin{itemize*}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+      \end{itemize*}
+
+    \item
+      \headerrow
+      {\textbf{[COMPANY_5]}}
+      {\textbf{[LOCATION_5]}}
+      \headerrow
+      {\emph{[JOB_TITLE_5]}}
+      {\emph{[DATE_RANGE_5]}}
+      \begin{itemize*}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+      \end{itemize*}
+
+    \item
+      \headerrow
+      {\textbf{[COMPANY_6]}}
+      {\textbf{[LOCATION_6]}}
+      \headerrow
+      {\emph{[JOB_TITLE_6]}}
+      {\emph{[DATE_RANGE_6]}}
+      \begin{itemize*}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+          \item {[ACHIEVEMENT_BULLET]}
+      \end{itemize*}
+
+\end{itemize}
+
+% \hrule
+% \vspace{-1em}
+% \subsection*{\Large Skills}
+
+% \hyphenpenalty=1000
+% \begin{itemize}[leftmargin=1em,noitemsep]
+%     \item \textbf{Languages:} [PROGRAMMING_LANGUAGES]
+%     \item \textbf{NLP Libraries:} [NLP_LIBRARIES]
+%     \item \textbf{Frameworks:} [FRAMEWORKS]
+%     \item \textbf{Tools:} [TOOLS]
+% \end{itemize}
+
+\hrule
+\vspace{-1em}
+\subsection*{\Large Education}
+
+\begin{itemize}[leftmargin=1em, noitemsep]
+    \item
+          \headerrow
+          {\textbf{[UNIVERSITY_1]}}
+          {\textbf{[UNIVERSITY_LOCATION_1]}}
+          \headerrow
+          {\emph{[DEGREE_1]}}
+          {\emph{[GRADUATION_YEAR_1]}}
+
+    \item
+          \headerrow
+          {\textbf{[UNIVERSITY_2]}}
+          {\textbf{[UNIVERSITY_LOCATION_2]}}
+          \headerrow
+          {\emph{[DEGREE_2]}}
+          {\emph{[GRADUATION_YEAR_2]}}
+
+\end{itemize}
+
+\hrule
+\vspace{-1em}
+\subsection*{\Large Languages}
+
+\begin{itemize}[leftmargin=1em,noitemsep]
+    \item {[NATIVE_LANGUAGE]} — [NATIVE_PROFICIENCY]
+    \item {[SECOND_LANGUAGE]} — [SECOND_PROFICIENCY]
+\end{itemize}
+
+\hrule
+
+\end{document}

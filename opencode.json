@@ -1,0 +1,186 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "model": "opencode-go/deepseek-v4.1-flash",
+  "commands": {
+    "setup": {
+      "template": "{file:.claude/commands/setup.md}",
+      "description": "Onboard candidate profile"
+    },
+    "scrape": {
+      "template": "{file:.claude/skills/job-scraper/SKILL.md}\n\nArguments: $ARGUMENTS",
+      "description": "Find and track new job postings"
+    },
+    "rank": {
+      "template": "{file:.claude/commands/rank.md}",
+      "description": "Evaluate and score a job"
+    },
+    "apply": {
+      "template": "{file:.claude/commands/apply.md}",
+      "description": "Draft and review application documents"
+    },
+    "submit": {
+      "template": "{file:.claude/commands/submit.md}",
+      "description": "Send an application to an hh.ru vacancy via Playwright"
+    },
+    "submit-login": {
+      "template": "{file:.claude/commands/submit-login.md}",
+      "description": "Refresh the hh.ru session used by /submit"
+    },
+    "interview": {
+      "template": "{file:.claude/commands/interview.md}",
+      "description": "Prepare interview materials"
+    },
+    "outcome": {
+      "template": "{file:.claude/commands/outcome.md}",
+      "description": "Record interview outcome"
+    },
+    "expand": {
+      "template": "{file:.claude/commands/expand.md}",
+      "description": "Discover transferable competencies"
+    },
+    "upskill": {
+      "template": "{file:.claude/skills/upskill/SKILL.md}\n\nArguments: $ARGUMENTS",
+      "description": "Generate prioritized learning plan"
+    },
+    "html-report": {
+      "template": "{file:.claude/commands/html-report.md}",
+      "description": "Generate application tracker dashboard"
+    },
+    "chat-answer": {
+      "template": "{file:.claude/commands/chat-answer.md}",
+      "description": "Draft a short answer to a live chat question"
+    },
+    "db": {
+      "template": "{file:.claude/commands/db.md}\n\n{file:.claude/skills/state-db/SKILL.md}\n\nArguments: $ARGUMENTS",
+      "description": "Query or update SQLite state by URL"
+    },
+    "weekly-review": {
+      "template": "{file:.claude/commands/weekly-review.md}",
+      "description": "Weekly funnel and cover-letter review"
+    },
+    "add-portal": {
+      "template": "{file:.claude/commands/add-portal.md}",
+      "description": "Register a new job portal"
+    },
+    "add-template-cv": {
+      "template": "{file:.claude/commands/add-template-cv.md}",
+      "description": "Register a custom CV template"
+    },
+    "add-template-cover-letter": {
+      "template": "{file:.claude/commands/add-template-cover-letter.md}",
+      "description": "Register a custom cover letter text template"
+    },
+    "reset": {
+      "template": "{file:.claude/commands/reset.md}",
+      "description": "Wipe personalization and start over"
+    }
+  },
+  "permissions": [
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "bun run *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "bun install *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python salary_lookup.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 salary_lookup.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python tools/letter_check.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 tools/letter_check.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python tools/apply_record.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 tools/apply_record.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python tools/hh_apply.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 tools/hh_apply.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python tools/hh_apply_record.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 tools/hh_apply_record.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python tools/state_db.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 tools/state_db.py *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "lualatex *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "pdftotext *",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "webfetch",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "websearch",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "*",
+      "effect": "ask"
+    }
+  ]
+}

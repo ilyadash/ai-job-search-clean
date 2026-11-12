@@ -1,0 +1,48 @@
+{
+  "lmstudio": {
+    "name": "LM Studio (host)",
+    "api": "openai",
+    "npm": "@ai-sdk/openai-compatible",
+    "host": "host.docker.internal",
+    "port": 1234,
+    "path": "/v1",
+    "defaultModel": "qwen/qwen3.5-9b",
+    "models": {
+      "qwen/qwen3.5-9b": {
+        "name": "qwen3.5-9b (local)",
+        "tools": true
+      },
+      "google/gemma-4-12b": {
+        "name": "gemma-4-12b (local)",
+        "tools": true
+      }
+    }
+  },
+  "deepseek": {
+    "name": "DeepSeek (cloud)",
+    "api": "openai",
+    "npm": "@ai-sdk/openai-compatible",
+    "baseURL": "https://api.deepseek.com",
+    "healthCheck": false,
+    "defaultModel": "deepseek-flash",
+    "models": {
+      "deepseek-flash": {
+        "name": "DeepSeek Flash (cloud)",
+        "tools": true
+      },
+      "deepseek-chat": {
+        "name": "DeepSeek Chat (cloud)",
+        "tools": true
+      },
+      "deepseek-reasoner": {
+        "name": "DeepSeek Reasoner (cloud)",
+        "tools": true
+      }
+    }
+  },
+  "custom": {
+    "name": "Custom OpenAI-compatible endpoint",
+    "api": "openai",
+    "npm": "@ai-sdk/openai-compatible"
+  }
+}

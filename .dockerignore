@@ -1,0 +1,53 @@
+# Keep the build context small and make it impossible for personal data to
+# end up in an image layer. The Dockerfile only COPYs .agents/skills and
+# docker/ - these rules are the belt to that suspenders.
+.git
+.github
+node_modules
+**/node_modules
+bun.lock
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+
+# Personal data
+documents
+job_search_tracker.csv
+salary_data.json
+gmail_sync
+reports
+company_research/*.json
+**/job_scraper
+upskill/*.md
+**/upskill/report-*.md
+.claude/projects
+.env
+.env.*
+
+# Generated documents and build artifacts
+*.pdf
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+cv/main_*.*
+!cv/main_example.tex
+cover_letters/cover_*.*
+cover_letters/Cover_*.*
+cv/*.txt
+
+# Personal media
+*.jpg
+*.jpeg
+*.png
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode
+.idea

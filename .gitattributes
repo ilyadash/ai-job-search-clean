@@ -1,0 +1,4 @@
+# Keep container scripts LF-only: a CRLF shebang breaks the Docker entrypoint
+# on Linux images when the working tree was checked out on Windows.
+docker/*.sh text eol=lf
+Dockerfile text eol=lf

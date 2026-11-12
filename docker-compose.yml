@@ -1,0 +1,85 @@
+name: ai-job-search
+
+services:
+  agent:
+    build:
+      context: .
+    image: ai-job-search-agent:local
+    init: true
+    stdin_open: true
+    tty: true
+    working_dir: /work
+    command: ["opencode"]
+    # All user-specific values (GH_TOKEN, GIT_USER_*, MODEL_*) come from
+    # .env.docker (gitignored; copy env.docker.example). Do NOT mirror them in
+    # an `environment:` block - that section overrides env_file, so empty
+    # defaults here would silently clobber the values from the file.
+    env_file:
+      - path: .env.docker
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # The repository is the container's only window into the host.
+      - .:/work
+      # OpenCode auth, sessions and caches survive container recreation.
+      - agent-home:/home/agent
+    read_only: true
+    tmpfs:
+      # exec is required: OpenCode's TUI dlopens its render library from /tmp.
+      - /tmp:size=512m,mode=1777,exec
+      - /run:size=16m,mode=755
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 4g
+    cpus: 2.0
+
+  # Telegram bot (aiogram): long-polling, no inbound ports, no userbot. For an
+  # allowlisted user id it runs the headless agent
+  # (`opencode run --standalone --format json` on the expanded /chat-answer
+  # prompt) with a read-only profile over the forwarded question and returns
+  # the draft; the bot token lives only here.
+  # Admin: docker compose run --rm telegram-gateway status
+  telegram-gateway:
+    image: ai-job-search-agent:local
+    init: true
+    working_dir: /work
+    entrypoint: ["python3", "tools/telegram_bot.py"]
+    command: ["serve"]
+    env_file:
+      - path: .env.docker
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Read-only: the bot runs the agent over the repository but never edits it.
+      - .:/work:ro
+      # Audit and the headless agent's state/caches.
+      - telegram-home:/home/agent
+    read_only: true
+    tmpfs:
+      # exec is required: the agent runtime dlopens libraries from /tmp.
+      - /tmp:size=512m,mode=1777,exec
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 4g
+    cpus: 2.0
+
+volumes:
+  agent-home:
+  # Telegram bot audit and headless-agent state; never mounted into the agent
+  # container.
+  telegram-home:
+
+# --- Hardening the network (future step) ------------------------------------
+# The default bridge network closes inbound traffic but leaves egress open.
+# To restrict egress to an allowlist (LLM endpoint + job portals + GitHub),
+# add an internal network and an allowlisting forward proxy, then point
+# HTTP_PROXY/HTTPS_PROXY at it. Note that not every HTTP client honors proxy
+# environment variables, so validate before relying on it. See DOCKER.md.
