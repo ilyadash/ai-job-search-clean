@@ -6,40 +6,17 @@
 
 *The job search that runs on your machine.*
 
-<p align="center">
-  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="ai-job-search-dev%2Fai-job-search | Trendshift" width="250" height="55"/></a>
-</p>
-
 [![CI](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml)
 
-An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code), with additive [OpenCode 2](https://opencode.ai/v2/docs) compatibility. Fork it, fill in your profile, and let your agent evaluate job postings, tailor your CV, write cover letters, and prepare you for interviews.
+An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code), with additive [OpenCode 2](https://opencode.ai/v2/docs) compatibility. Fork it, fill in your profile, and let your agent evaluate job postings, write cover letters, prepare you for interviews, and (on hh.ru) send the response for you. You apply with your existing CV: the workflow never tailors or recompiles it.
 
 > Note: This is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or maintained by Anthropic. Anthropic and Claude Code are referenced only to describe the toolchain this workflow uses.
 >
-> This project has **no affiliated cryptocurrency, token, or paid sponsorship program**. Anything claiming otherwise is unauthorized and should be treated as a scam. The only ways to support the project are the Ko-fi link below and contributing on GitHub.
-
-## Does it actually work?
-
-I'm a geophysicist by training. When my position was cut in late 2025, I built this framework to run my own job search - the same `/scrape`, `/apply`, and `/interview` workflow in this repo, used weekly, on my own career. I was upfront about it with every employer I spoke to, and instead of counting against me, it usually sparked a genuine technical conversation.
-
-Sixty-nine tailored applications, twenty first interviews, and one signed contract later, I started as an AI engineer in June 2026. People kept asking whether this actually works. It got me hired. Now it's yours.
-
-*The longer version, including the full application funnel, is on [LinkedIn](https://www.linkedin.com/in/mads-lorentzen/).*
-
-<p align="center">
-  <i>Did this save you a Sunday of cover-letter writing? Consider a coffee.<br>
-  Did it land you the job? Maybe two.</i> ☕
-</p>
-
-<p align="center">
-  <a href="https://ko-fi.com/madslorentzen">
-    <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=6" alt="Buy me a coffee at ko-fi.com" height="40">
-  </a>
-</p>
+> This project has **no affiliated cryptocurrency, token, or paid sponsorship program**. Anything claiming otherwise is unauthorized and should be treated as a scam. The only way to support the project is contributing on GitHub.
 
 ## What this is
 
-A structured workflow that turns Claude Code or OpenCode into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills cover some markets out of the box (`linkedin-search`, plus market-specific skills such as `hhru-search` for Russia), and the pattern is designed to be extended to any local job board with `/add-portal`.
+A structured workflow that turns Claude Code or OpenCode into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills cover some markets out of the box (`linkedin-search`, plus market-specific skills such as `hhru-search` and `habr-career-search` for Russia), and the pattern is designed to be extended to any local job board with `/add-portal`.
 
 ```
 /setup          /scrape              /apply <url>
@@ -50,7 +27,7 @@ your profile   portals              Score & recommend
   |                |                     |
   v                v                     v
 Profile        Present matches      Draft cover letter
-files ready    with fit ratings     (plain text, pasted into portal)
+files ready    with fit ratings     (plain text; hh.ru auto-submits)
                    |                     |
                    v                     v
                Pick a match         Reviewer agent critiques
@@ -64,8 +41,9 @@ The framework encodes career guidance best practices, including structured evalu
 - [Claude Code](https://claude.com/claude-code) (CLI). Claude Code has no free tier: you need a Claude Pro/Max/Team subscription or Anthropic API credits (pay-per-token, usually cheaper for occasional use). Using a different agent tool (Codex, Antigravity, Gemini CLI)? Start at [`AGENTS.md`](AGENTS.md) - the portal search skills work there out of the box, and [community forks](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) adapt the full workflow.
 - Python 3.10+
 - [Bun](https://bun.sh) (for job search CLI tools)
-- LaTeX distribution with `lualatex`: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/). The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter is plain text pasted into the portal's field and needs no LaTeX. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
-- Optional: `pip install pypdf` for `/apply`'s ATS parseability check (BSD; no Poppler required). Poppler `pdftotext` remains a fallback (macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`). If both are missing, the check degrades to a visual keyword review.
+- Optional: LaTeX distribution with `lualatex` — [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/) — only for the reference CV template library (`/add-template-cv`) and for `tools/verify_pdf.py`. `/apply` neither drafts nor compiles a CV: you apply with your existing CV, and the cover letter is plain text pasted into the portal's field, so an application needs no TeX engine. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
+- Optional: `pip install pypdf` for PDF text extraction in `tools/verify_pdf.py` and the template reference docs (BSD; no Poppler required). Poppler `pdftotext` remains a fallback (macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`). If both are missing, the CV reference checks degrade to a visual read.
+- For hh.ru search: an `HH_API_TOKEN` (create an application at [dev.hh.ru](https://dev.hh.ru)). Anonymous search returns HTTP 403, so `hhru-search` exits with `MISSING_CREDENTIALS` until the token is set. `/submit` additionally needs a saved browser session; `/setup` (or `/submit-login`) creates it.
 
 ## Quick start
 
@@ -89,26 +67,13 @@ cd ai-job-search
 
 ### 2. Install job search tools
 
-PowerShell:
-
-```powershell
-$tools = @("linkedin-search", "hhru-search", "habr-career-search")
-foreach ($tool in $tools) {
-  Set-Location ".agents/skills/$tool/cli"
-  bun install
-  Set-Location "..\..\..\.."
-}
-```
-
-Bash / zsh / Git Bash:
-
 ```bash
-for tool in linkedin-search hhru-search habr-career-search; do
-  cd .agents/skills/$tool/cli && bun install && cd ../../../..
-done
+python3 tools/install_portal_clis.py   # Windows: python tools\install_portal_clis.py
 ```
 
-For zero-runtime-dependency skills (`linkedin-search`, `hhru-search`) the install is optional: they run with plain `bun`; `bun install` only pulls TypeScript dev types.
+It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` — discovered, not listed, so a portal you add with `/add-portal` or copy from another fork is included on a fresh clone. Every install runs with `--ignore-scripts`, and a CLI whose `package.json` declares an install-time lifecycle script, `trustedDependencies` or `workspaces`, or that has a `bunfig.toml` or `.npmrc` beside it, is skipped and reported rather than run. `--dry-run` shows what it would install.
+
+The shipped `linkedin-search`, `hhru-search`, and `habr-career-search` CLIs have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types, so the install is optional for them. `hhru-search` additionally needs `HH_API_TOKEN` in the environment (see [Prerequisites](#prerequisites)).
 
 ### 3. Set up your profile
 
@@ -127,6 +92,8 @@ opencode
 ```
 
 `/setup` offers three paths: read your `documents/` folder if you have one populated (CV PDF, LinkedIn export, diplomas, reference letters, past applications), import a single CV pasted in chat, or walk through an interview. It auto-detects what you have and asks. Documents-folder mode is idempotent and safe to re-run as you add more material; see `documents/README.md` for the layout.
+
+At the end it asks whether `/submit` may respond to hh.ru vacancies on your behalf. Answer **Yes** and `/setup` saves your hh.ru browser session via `/submit-login`, which lets `/apply` send hh.ru responses automatically; answer **No** and `/submit` stays unavailable, with `/apply` falling back to manual submission. The decision is stored as `hh.ru auto-submit: Enabled|Disabled` in `CLAUDE.md`, and re-running `/setup` can flip it later.
 
 ### 4. Search for jobs
 
@@ -150,15 +117,17 @@ If the URL can't be fetched (some job portals block automated access), you can p
 
 The command works the same way in OpenCode. This runs the full workflow: evaluate fit, draft the cover letter, review with a second agent, revise, and present the final output. The candidate applies with their existing CV, which this workflow does not modify.
 
+For an hh.ru vacancy with auto-submit enabled, `/apply` also sends the response through `/submit` - without the cover letter by default - and reports the result (`APPLIED`, or `ACTION_REQUIRED` when the vacancy demands a letter or extra fields). Send the draft with `/submit <url> --letter <path>`, or add it to an already-sent response with `/submit <url> --attach --letter <path>`. Every other portal keeps the manual instruction: open the posting, attach your CV, paste the letter.
+
 Postings are treated as untrusted input (the workflow follows no instructions embedded in them and fetches no links from their body), but agentic defenses are instruction-level, not a sandbox - on an unfamiliar job board, skim what was fetched and written before you hit send. Details in [SECURITY.md](SECURITY.md).
 
 ### Optional: run the agent in Docker
 
-If you would rather keep the agent off your host, the repository ships a Docker setup. OpenCode and the full toolchain (Bun, Python, TeX Live, poppler) run in an unprivileged, read-only container with this repository as its only host mount, while the model server (LM Studio) can stay on the host and keep using the GPU. See [DOCKER.md](DOCKER.md) for host setup, the security model, and troubleshooting.
+If you would rather keep the agent off your host, the repository ships a Docker setup. OpenCode and the full toolchain (Bun, Python, TeX Live, poppler) run in an unprivileged, read-only container with this repository as its only host mount. The default model is DeepSeek Flash (cloud); an optional LM Studio server can stay on the host and keep using the GPU. See [DOCKER.md](DOCKER.md) for host setup, the security model, and troubleshooting.
 
 ## Other commands
 
-`/setup`, `/scrape`, and `/apply` form the core workflow. Ten more commands extend it once your profile is in place. All commands work identically in OpenCode — the same `/command` syntax loads the same workflow files.
+`/setup`, `/scrape`, and `/apply` form the core workflow. Fourteen more commands extend it once your profile is in place. All commands work identically in OpenCode — the same `/command` syntax loads the same workflow files.
 
 - **`/interview`** preps you for a scheduled interview on a tracked application. It builds a stage-specific prep pack from the application's archive (the exact posting, the CV and cover letter the interviewer actually read, feedback recorded from earlier rounds), researches the company and interviewers with a verify-before-use rule, maps likely questions to your STAR examples, and offers a mock interview following the roleplay protocol in `07-interview-prep.md`. Gaps get honest bridge answers, never invented experience.
 - **`/outcome`** records what happened to an application - interview stages, offers, rejections, silence. It archives the submitted CV, cover letter, and posting text into `documents/applications/<company>_<role>/`, keeps structured status/stages and dated notes in the SQLite state database (`application_events`), and keeps `outcome.md` as undated narrative feedback only. It also owns the stretch before there is an outcome to record: `/outcome followup` surfaces open applications that have gone quiet (default 10 days), drafts a short channel-appropriate follow-up in your writing style using only claims from the materials you already submitted (drafts only, never sends; at most twice per application), and offers a thank-you note in the same turn an interview stage is recorded. Once a few applications resolve, it points you back to `/setup` to calibrate the fit framework from what actually got interviews.
@@ -168,7 +137,10 @@ If you would rather keep the agent off your host, the repository ships a Docker 
 - **`/expand`** enriches your profile by scanning public sources you've already linked in it (GitHub repos, portfolio site, Kaggle, Google Scholar) and looking up syllabi for named courses and certifications. Discovered competencies are added to your profile with a source tag. Useful right after `/setup` to surface skills that documents alone don't make explicit.
 - **`/upskill`** analyzes the gap between your profile, your tracked job postings, and your ranked-but-untracked postings (`/rank`'s recorded gaps in the jobs table) — or a single posting via `/upskill <URL>`. Produces a prioritized heatmap of skill gaps and a learning plan with web-searched study resources and time estimates. Useful for career planning between applications.
 - **`/html-report`** generates a self-contained HTML dashboard from the SQLite state database and the application archives — stat cards, status/sector/channel/funnel charts (inline SVG, no external dependencies), and a filterable applications table. Opens directly in a browser, fully offline. Re-run it any time after `/apply` or `/outcome` adds new entries.
-- **`/add-template-cv`** registers your own CV template (LaTeX, Typst, or another toolchain) in place of the stock one. It captures the template's instructions (source extension, compile command, fonts, style rules, page limit), runs a mandatory test compile, and wires the template into `/apply`. Its text-only sibling **`/add-template-cover-letter`** registers a cover-letter structure — a plain-text skeleton plus content rules, a body word limit and any portal character cap — with no compile step, ever. See [Custom templates](#custom-templates) below.
+- **`/submit`** sends a response to an hh.ru vacancy with Playwright, using the saved session. By default it applies without the cover letter; `--letter <path>` pastes one into the form, and `--attach --letter <path>` adds one to a response already sent. It honors the `hh.ru auto-submit:` flag in `CLAUDE.md` and stops when auto-submit was disabled at setup. `/apply` calls it automatically for hh.ru postings; run it directly to resend or to attach a letter later.
+- **`/submit-login`** refreshes the saved hh.ru browser session (`state/hh_storage_state.json`, gitignored): interactive login on a machine with a display, host instructions when the agent is headless, and `--from <path>` to import an existing Playwright `storage_state.json`. Use it when `/submit` reports `NEEDS_LOGIN`, or to switch accounts. `HH_API_TOKEN` is separate and lives in `.env.docker` for the container.
+- **`/chat-answer`** drafts a short, honest answer to a question an AI interviewer or recruiter chatbot has just asked. Paste its message, get 2-4 sentences grounded in your profile files, and send it yourself; sensitive topics such as salary come with a warning.
+- **`/add-template-cv`** registers a CV template (LaTeX, Typst, or another toolchain): source extension, compile command, fonts, style rules, page limit, plus a mandatory test compile. In this fork it manages the CV template as a reference library — `/apply` neither drafts nor compiles a CV, so the registered template is not invoked by an application. Its text-only sibling **`/add-template-cover-letter`** registers a cover-letter structure — a plain-text skeleton plus content rules, a body word limit and any portal character cap — with no compile step, ever, and does wire into `/apply`. See [Custom templates](#custom-templates) below.
 - **`/add-portal`** generates a job-portal search skill for a job board in your market. It investigates the portal (search URL pattern, result structure, access rules), scaffolds the CLI skill from the same structure as the shipped ones, and test-runs a live query before registering. See [Job search tools](#job-search-tools) below.
 
 `/reset` is also available, see [Starting over](#starting-over) below.
@@ -180,8 +152,10 @@ ai-job-search/
 ├── CLAUDE.md                          # Main candidate profile + workflow rules
 ├── .claude/
 │   ├── commands/
-│   │   ├── apply.md                   # /apply workflow (drafter-reviewer)
+│   │   ├── apply.md                   # /apply workflow (drafter-reviewer + automatic hh.ru submission)
 │   │   ├── setup.md                   # /setup onboarding (documents folder, CV import, or interview)
+│   │   ├── submit.md                  # /submit send an hh.ru response via Playwright
+│   │   ├── submit-login.md            # /submit-login refresh the saved hh.ru browser session
 │   │   ├── expand.md                  # /expand competency enrichment from documents and online presence
 │   │   ├── add-template-cv.md            # /add-template-cv register a custom CV template (LaTeX, Typst, ...)
 │   │   ├── add-template-cover-letter.md # /add-template-cover-letter register a plain-text cover-letter template
@@ -189,10 +163,16 @@ ai-job-search/
 │   │   ├── rank.md                    # /rank triage scraped jobs into a ranked shortlist
 │   │   ├── outcome.md                 # /outcome undated narrative, archive materials
 │   │   ├── interview.md               # /interview stage-specific prep pack + mock interview
+│   │   ├── chat-answer.md             # /chat-answer short answer to a live chat question
 │   │   ├── html-report.md             # /html-report generate application tracker dashboard
 │   │   ├── db.md                      # /db SQLite state by URL
 │   │   ├── weekly-review.md           # /weekly-review funnel and cover-letter report
-│   │   └── reset.md                   # /reset wipe profile, templates, memory, documents, state
+│   │   └── reset.md                   # /reset wipe profile, templates, memory, documents, state, backups
+│   ├── agents/
+│   │   ├── application-reviewer.md    # Independent cover-letter reviewer (/apply)
+│   │   ├── hh-applier.md              # hh.ru form-filling subagent (/submit)
+│   │   ├── posting-fetcher.md         # Read-only posting fetch (/apply, /rank)
+│   │   └── posting-scorer.md          # Fit-scoring subagent (/rank)
 │   ├── skills/
 │   │   ├── job-application-assistant/  # Core application skill
 │   │   │   ├── SKILL.md               # Skill definition
@@ -200,23 +180,29 @@ ai-job-search/
 │   │   │   ├── 02-behavioral-profile.md# PI/DISC/personality assessment
 │   │   │   ├── 03-writing-style.md    # Tone, structure, do's and don'ts
 │   │   │   ├── 04-job-evaluation.md   # Scoring framework for job fit
-│   │   │   ├── 05-cv-templates.md     # LaTeX CV structure + tailoring rules
+│   │   │   ├── 05-cv-templates.md     # CV template reference (not used by /apply)
 │   │   │   ├── 06-cover-letter-templates.md # Plain-text cover letter guide
-│   │   │   └── 07-interview-prep.md   # STAR examples + interview framework
-│   │   ├── job-scraper/               # Job search orchestration
+│   │   │   ├── 07-interview-prep.md   # STAR examples + interview framework
+│   │   │   ├── 08-application-forms.md# Application form fields and portal limits
+│   │   │   ├── 09-web-research.md     # Web research and fetching rules
+│   │   │   └── 10-reviewer.md         # Reviewer agent instructions
+│   │   ├── job-scraper/               # Job search orchestration + search-queries.md
+│   │   ├── state-db/                  # /db skill: SQLite schema and read-only queries
+│   │   ├── document-extraction/       # Text extraction for .doc/RTF/PDF scans (OCR)
 │   │   └── upskill/                   # /upskill skill gap analysis and learning plan
 │   └── settings.json                  # Claude Code permissions (shared, scoped)
 ├── opencode.json                      # OpenCode 2 config (bridges to .claude/commands/)
 ├── AGENTS.md                          # Thin pointer for non-Claude runtimes
+├── .opencode/plugins/                 # Typed tools: apply-prefetch, hh-apply, state-db
 ├── .agents/skills/                    # Job portal CLI tools
-│   ├── hhru-search/                   # hh.ru job listings (Russia, official API)
+│   ├── hhru-search/                   # hh.ru job listings (Russia, official API, needs HH_API_TOKEN)
 │   ├── habr-career-search/            # Career.Habr IT job board (Russia, public pages)
 │   ├── linkedin-search/               # LinkedIn public job listings (country-agnostic)
 │   └── …                              # any market-specific skill you add with /add-portal
 ├── cv/
 │   ├── main_example.tex               # moderncv LaTeX template (master CV, stays at the root)
 │   └── <company>/
-│       └── main_<company>_<role>.tex  # Per-company CVs
+│       └── main_<company>_<role>.tex  # Per-company CVs (reference library, not generated by /apply)
 ├── cover_letters/
 │   └── <company>/
 │       └── cover_<company>_<role>.txt # Per-company plain-text cover letters, pasted into portal forms
@@ -227,11 +213,31 @@ ai-job-search/
 │   ├── cv/                            # Master CV (PDF or .tex)
 │   ├── linkedin/                      # LinkedIn profile export (PDF)
 │   ├── diplomas/                      # Degree certificates and transcripts
+│   ├── projects/                      # Project summaries and portfolio notes
+│   ├── postings/                      # Pasted or saved job postings
 │   ├── references/                    # Reference letters
-│   └── applications/                  # Past application records (<company>_<role>/)
-├── .github/workflows/ci.yml           # CI: CV LaTeX smoke compile, skill lint, CLI typechecks
+│   └── applications/                  # Application archives (<company>_<role>/)
+├── company_research/                  # Per-company research from /apply and /interview (personal, gitignored)
+├── reports/                           # /weekly-review and /html-report output (personal, gitignored)
+├── state/                             # SQLite tracker, migrations, saved hh.ru session (personal data gitignored; migrations tracked)
+├── job_scraper/                       # Scraper scratch space (job state now lives in SQLite)
+├── upskill/                           # /upskill report output (markdown reports per run)
+├── tests/                             # Python unittest suite run by CI on Linux 3.10-3.14 and Windows
+├── docker/                            # Container entrypoint + service model config
+├── Dockerfile                         # OpenCode + toolchain image (see DOCKER.md)
+├── docker-compose.yml                 # Compose service for the agent container
+├── Makefile                           # Docker/tooling shortcuts (make help)
+├── .github/workflows/                 # ci.yml, release.yml, upstream-watch.yml
 ├── salary_lookup.py                   # Salary benchmarking tool (BYO data)
 ├── tools/
+│   ├── state_db.py                    # SQLite state CLI (show/update/stats/query)
+│   ├── hh_apply.py                    # Playwright hh.ru response form (used by /submit)
+│   ├── hh_apply_record.py             # Record hh.ru submission results
+│   ├── letter_check.py                # Deterministic cover-letter checks
+│   ├── apply_prefetch.py              # /apply posting fetch and normalization
+│   ├── apply_record.py                # /apply draft recording
+│   ├── posting_guard.py               # Posting integrity gate (hidden text, instruction-like lines)
+│   ├── install_portal_clis.py         # bun install for every portal CLI (--ignore-scripts)
 │   ├── check_framework_version.py     # CI check: framework_version bumped when skill files change
 │   ├── check_upstream_updates.py      # Preview which personalized files an upstream update touches
 │   ├── convert_salary_excel.py        # Convert salary Excel to JSON
@@ -241,10 +247,8 @@ ai-job-search/
 │   ├── upstream_triage.py             # Sort upstream commits into worth-reviewing vs probably-skip
 │   ├── verify_layout.py               # Measure a compiled PDF's page layout (holes, orphans, footer collisions)
 │   ├── verify_pdf.py                  # Verify a compiled PDF's page count and extractable text
-│   └── README_SALARY_TOOL.md          # Salary tool setup instructions
-├── job_scraper/                       # Scraper state (seen jobs, results)
-├── upskill/                           # /upskill report output (markdown reports per run)
-├── state/job_search.sqlite             # Application/job/outcome state (personal, gitignored)
+│   ├── README_SALARY_TOOL.md          # Salary tool setup instructions
+│   └── …                              # fetch/parse helpers, Telegram gateway
 └── SETUP.md                           # Detailed setup guide
 ```
 
@@ -258,9 +262,10 @@ The `/apply` command runs a **drafter-reviewer workflow** that produces a cover 
 4. **Spawn a reviewer agent** that researches the company and critiques the draft
 5. **Revise** based on the reviewer's feedback
 6. **Check the letter as text**: length limits, structure, language matches the posting, no markup, final proofread
-7. **Present** the final output with a verification checklist
+7. **Submit on hh.ru** when the posting is an hh.ru vacancy and auto-submit is enabled: `/submit` sends the response without the letter by default and reports `APPLIED` or `ACTION_REQUIRED`
+8. **Present** the final output with a verification checklist
 
-All claims in the cover letter are verified against your actual profile. The system never fabricates skills or experience.
+All claims in the cover letter are verified against your actual profile. The system never fabricates skills or experience. On other portals the workflow stops at the paste-ready letter and the manual submission instruction.
 
 ### Using with OpenCode
 
@@ -278,7 +283,7 @@ opencode
 
 Commands, prompts, and output contracts are identical. OpenCode just needs one extra file (`opencode.json`) that tells it where to find each workflow. See `AGENTS.md` for the architecture.
 
-> **Note:** The OpenCode `permissions` array in `opencode.json` uses a curated allowlist for `shell` commands (matching upstream's `.claude/settings.json` posture). Only workflow-essential commands (`bun run`, `lualatex`, `pdftotext`, `python salary_lookup.py`) are auto-approved; other commands prompt for confirmation. `external_directory` asks before touching paths outside the project.
+> **Note:** The OpenCode `permissions` array in `opencode.json` uses a curated allowlist for `shell` commands (matching upstream's `.claude/settings.json` posture). Only workflow-essential commands are auto-approved: `bun run`, `bun install`, `lualatex`, `pdftotext`, `python salary_lookup.py`, and the workflow scripts `tools/letter_check.py`, `tools/apply_record.py`, `tools/state_db.py`, `tools/hh_apply.py`, `tools/hh_apply_record.py`. Other commands prompt for confirmation. `external_directory` asks before touching paths outside the project.
 
 ### What makes this workflow different
 
@@ -297,9 +302,9 @@ If you prefer editing files directly instead of using `/setup`:
 | `01-candidate-profile.md` | Structured version of your CV data |
 | `02-behavioral-profile.md` | Your behavioral assessment or self-assessment |
 | `04-job-evaluation.md` | Skill match areas, career goals, motivation filters |
-| `05-cv-templates.md` | Profile statement templates for different role types |
+| `05-cv-templates.md` | CV template reference and profile statements (not used by `/apply`) |
 | `07-interview-prep.md` | Your STAR examples from actual experience |
-| `search-queries.md` | Job search queries for your skills and location |
+| `.claude/skills/job-scraper/search-queries.md` | Job search queries for your skills and location |
 
 ### Updating your search queries
 
@@ -353,7 +358,7 @@ Give it your local job board's URL. The command investigates the portal (search-
 
 Maintaining a fork adapted to your market or language? Add it to the [Community forks & adaptations](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) thread so others can find it.
 
-For **country-agnostic** starting points, the repo ships one portal skill:
+For **country-agnostic** starting points, use the one field- and country-agnostic skill the repo ships:
 
 - **`linkedin-search`** — built on LinkedIn's public, unauthenticated `jobs-guest` endpoints. Field-agnostic, **zero runtime dependencies** (runs with just `bun`), and takes the search location as an explicit flag, so it works for any market out of the box (`-l "Berlin, Germany"`, `-l "Mumbai, Maharashtra, India"`, `-l "Remote"`, …). Intended for **personal use only** — automated access is against LinkedIn's Terms of Service, so keep volume low. See `.agents/skills/linkedin-search/SKILL.md`.
 
@@ -362,7 +367,7 @@ For **country-agnostic** starting points, the repo ships one portal skill:
 Everything above adds up to an extension model, so here it is stated plainly. The framework has three extension points, and none of them require touching upstream:
 
 1. **Portal skills** - the module system for job boards. Every `*-search` skill is a self-contained folder under `.agents/skills/` with the same contract (a `search`/`detail` CLI, `--format json|table|plain` output, an `enabled:` flag in its `SKILL.md`, its own tests). `/scrape` auto-discovers any installed skill that follows the contract - nothing to register, nothing to wire up. `/add-portal` generates new ones; the [community portal index](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) catalogs the ones other forks have built.
-2. **Document templates** - `/add-template-cv` registers any CV toolchain that compiles to PDF from the command line, LaTeX or otherwise. Cover letters are plain text by design; `/add-template-cover-letter` registers their plain-text structure and content rules (no compile step exists or is ever added).
+2. **Document templates** - `/add-template-cv` registers any CV toolchain that compiles to PDF from the command line, LaTeX or otherwise (a reference library in this fork: `/apply` neither drafts nor compiles a CV). Cover letters are plain text by design; `/add-template-cover-letter` registers their plain-text structure and content rules, and is wired into `/apply` (no compile step exists or is ever added).
 3. **Evaluation criteria** - deal-breakers and preferences in your profile are free-form, and the evaluation rubric scores against whatever you put there. "Strong parental-leave terms", "minimum salary X per my union's scale", "no on-call" - each is one profile line, no code, and it carries real weight in `/rank` and `/apply` fit evaluations. Language is the one deal-breaker type with dedicated, structured handling: `/setup` captures every language you work in and your level (asked directly, or inferred from your CV/LinkedIn export) into a `Languages` table, and the Language Gate (`04-job-evaluation.md`) hard-rejects a posting that requires a language you haven't declared at all, while flagging - not auto-rejecting - one that asks for a higher level than you declared in a language you do work in, so a borderline case (a strict "fluent" bar against your own B1/B2, say) gets your judgment instead of a silent drop.
 
 **Borrowing a portal skill from another fork** is the intended way to get a board that upstream doesn't ship: find it in the [portal index](https://github.com/ai-job-search-dev/ai-job-search/discussions/78), open that fork, and copy the one folder into your own `.agents/skills/`. Before you run it:
@@ -384,15 +389,16 @@ The salary tool works with any salary data you provide (union statistics, Glassd
 To wipe your personal data and start fresh:
 
 ```
-/reset              # full wipe: profile + templates + memory + documents + state
+/reset              # full wipe: profile + templates + memory + documents + state + backups
 /reset profile      # clears skill files, preserves framework rules
 /reset templates    # deletes per-company CVs/letters, restores the master CV
 /reset memory       # blanks CLAUDE.md and removes the name from agent markdown
 /reset documents    # deletes files from documents/ folder
 /reset state        # deletes the SQLite tracker, hh session, and derived reports
+/reset backups      # deletes everything under backups/, keeps the .gitkeep placeholder
 ```
 
-`/reset` shows exactly what will be deleted. The bare command asks `Да`/`Нет` and then runs all five branches; a single branch requires you to type `RESET` to confirm. Nothing is deleted until you confirm.
+`/reset` shows exactly what will be deleted. The bare command asks `Да`/`Нет` and then runs all six branches; a single branch requires you to type `RESET` to confirm. Nothing is deleted until you confirm.
 
 ### Staying up to date
 
